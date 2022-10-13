@@ -1,0 +1,10 @@
+Example Python/
+Constraint_Window/
+SegmentWindow/
+.csv
+*.da
+*.xlsx
+*.rtf
+*.ui
+*.jpg
+__pycache__/
