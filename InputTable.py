@@ -3,6 +3,46 @@ from PyQt5.QtWidgets import QTableWidget, QComboBox, QTableWidgetItem, QCheckBox
 import numpy as np
 import pandas as pd
 
+
+class Fluid:
+
+	unit_conversions = {'m3/day':1,'E3m3/day':1000,'bbl/day':0.158987,'Mbbl/day':158.987} # Conversion factors are to get to m3/day
+
+	def __init__(self, fluid_type, title):
+		self.title = title
+		self.fluid_type = fluid_type
+
+	def fluid(self):
+		return self.fluid_type
+
+	def fluid_type(self):
+		return self.fluid_type
+
+	def conversion(self, unit):
+		try:
+			return self.unit_conversions[unit]
+		except:
+			raise ValueError("That is not a valid unit for fluids")
+
+class FluidList:
+
+	def __init__(self):
+		self.fluids = [
+			Fluid('oil','Cal. Oil Rate'),
+			Fluid('water','Cal. Condensate Rate'),
+			Fluid('cond','Cal. Water Rate'),
+			Fluid('daily','Cal. Daily Fluid')
+		]
+
+	def label_list(self):
+		return [fluid.title() for fluid in self.fluids]
+
+	def type_of(self):
+		return [fluid.fluid_type() for fluid in self.fluids]
+
+	def conversion(self, unit):
+		return self.fluids[0].conversion(unit)
+
 class InputTable(QTableWidget):
 
 	def __init__(self, parent, df, name):
@@ -16,11 +56,12 @@ class InputTable(QTableWidget):
 			self.setRowCount(25)
 			self.last_iteration = np.array([''] * self.l)
 
+			self.fluids = FluidList()
 
-			self.oillabels   = ['Cal. Oil Rate']
-			self.condlabels  = []#['Cal. Condensate Rate']
-			self.waterlabels = []#['Cal. Water Rate']
-			self.dailylabels = []#['Cal. Daily Fluid']
+			# self.oillabels   = ['Cal. Oil Rate']
+			# self.condlabels  = []#['Cal. Condensate Rate']
+			# self.waterlabels = []#['Cal. Water Rate']
+			# self.dailylabels = []#['Cal. Daily Fluid']
 			self.UWIlabels   = ['UWI']
 
 			self.passlabels  = [''] + self.UWIlabels
@@ -217,5 +258,3 @@ class InputTable(QTableWidget):
 
 		return_df.fillna(0,inplace = True)
 		return return_df
-
-
