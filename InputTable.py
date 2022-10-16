@@ -1,5 +1,6 @@
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QTableWidget, QComboBox, QTableWidgetItem, QCheckBox, QMessageBox, QWidget, QVBoxLayout, QHBoxLayout
+import PyQt5 as Qt
+from PyQt5.QtWidgets import QTableWidget, QComboBox, QTableWidgetItem, QCheckBox, QMessageBox, QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QHeaderView
 import numpy as np
 import pandas as pd
 
@@ -68,6 +69,7 @@ class ComboBoxPair(QWidget):
 
 		layout = QVBoxLayout()
 		self.setLayout(layout)
+		self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
 		self.top = QComboBox()
 		self.bottom = QComboBox()
@@ -93,7 +95,6 @@ class ComboBoxes(QWidget):
 
 	def __init__(self):
 		super().__init__()
-
 		self.layout = QHBoxLayout()
 		self.setLayout(self.layout)
 
@@ -103,12 +104,19 @@ class ComboBoxes(QWidget):
 			box.populateItems(items)
 			self.layout.addWidget(box)
 
+
 class InputTable(QTableWidget):
+
+	def sizeHint(self):
+		return QtCore.QSize(500, 500)
 
 	def __init__(self, parent, df, name):
 		super(QTableWidget, self).__init__(parent)
 		self.name = name
 		self.df = df
+
+		# self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
 		cols = df.columns
 		self.l = len(cols)
@@ -135,20 +143,20 @@ class InputTable(QTableWidget):
 		self.top_boxes = {}
 		self.lower_boxes = {}
 
-		items = {f.fluid_title():f.unit_list() for f in self.fluids.fluids}
-		items[""] = [""]
-		items["UWI"] = [""]
-		items["Date"] = self.datelist
+		# items = {f.fluid_title():f.unit_list() for f in self.fluids.fluids}
+		# items[""] = [""]
+		# items["UWI"] = [""]
+		# items["Date"] = self.datelist
 
 		# self.boxes = ComboBoxes(self.l, items)
 		# self.setCellWidget(1, -1, self.boxes)
-
+		self.setMinimumWidth(50)
 
 		for i in range(self.l):
 			#Create the tab at the top of the page
 			item = QTableWidgetItem(str(cols[i]))
 			item.setTextAlignment(QtCore.Qt.AlignHCenter)
-			self.setItem(2, i, item)
+			self.setItem(0, i, item)
 
 			for j in range(min(23, len(df[cols[0]]))):
 
@@ -170,7 +178,6 @@ class InputTable(QTableWidget):
 		self.setHorizontalHeaderItem(0, QTableWidgetItem(None))
 		self.horizontalHeader().setSectionResizeMode(1)
 		self.verticalHeader().setSectionResizeMode(1)
-		self.setSizePolicy(2, 2)
 
 	def import_table(self):
 

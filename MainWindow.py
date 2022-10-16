@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import datetime
 import pickle
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTreeWidgetItem, QFileDialog, QFileDialog, QInputDialog
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTreeWidgetItem, QFileDialog, QFileDialog, QInputDialog, QSizePolicy
 from Constraint_Menu import Ui_ConstraintWindow
 from mainwindow_v5 import Ui_MainWindow
 from Well import Well

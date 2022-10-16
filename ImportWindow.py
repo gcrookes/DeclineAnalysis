@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QGridLayout, QWidget
 import pandas as pd
 from InputTable import ComboBoxes, FluidList, InputTable
 
@@ -35,11 +35,7 @@ class Ui_ImportWindow(object):
 
 
 		self.boxes = ComboBoxes()
-		self.verticalLayout.addWidget(self.boxes)
 		self.verticalLayout.addWidget(self.tabWidget)
-
-
-
 
 
 		ImportWindow.setCentralWidget(self.centralWidget)
@@ -80,21 +76,25 @@ class Ui_ImportWindow(object):
 
 		fluids = FluidList()
 		self.fluidlabels = fluids.label_list()
-		self.datelist = ['YYYY-MM-DD', 'YYYY-DD-MM', 'MM-DD-YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD', 'YYYY/DD/MM', 'MM/DD/YYYY', 'DD/MM/YYYY', 'MMM-YY', 'YY-MMM', 'MMM/YY', 'YY/MMM']
-		items = {f.fluid_title():f.unit_list() for f in fluids.fluids}
-		items[""] = [""]
-		items["UWI"] = [""]
-		items["Date"] = self.datelist
+		datelist = ['YYYY-MM-DD', 'YYYY-DD-MM', 'MM-DD-YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD', 'YYYY/DD/MM', 'MM/DD/YYYY', 'DD/MM/YYYY', 'MMM-YY', 'YY-MMM', 'MMM/YY', 'YY/MMM']
+
+		items = {"":[""], "UWI":[""], "Date":datelist}
+		items.update({f.fluid_title():f.unit_list() for f in fluids.fluids})
 
 		self.boxes.populate(8, items)
-
+		w = QWidget()
+		l1 = QGridLayout()
+		w.setLayout(l1)
+		l1.addWidget(self.boxes, 0, 0, 1, 1)
+		
 		# Clear old sheets and add in the spreadsheet as new tabs
 		self.tabWidget.clear()
 		for name, sheet in sheets.items():
 			table = InputTable(self.tabWidget, sheet, name)
-			self.tabWidget.addTab(table, name)
-
-		self.show()
+			l1.addWidget(table, 1, 0, -1, -1)
+			self.tabWidget.addTab(w, name)
+			break
+		self.showMaximized()
 
 	def import_items(self):
 
