@@ -1,6 +1,6 @@
 from __future__ import with_statement
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication
 import matplotlib
 matplotlib.use("Qt5Agg")
 from matplotlib import style
