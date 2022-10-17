@@ -8,7 +8,7 @@ from Constraint_Menu import Ui_ConstraintWindow
 from mainwindow_v5 import Ui_MainWindow
 from Well import Well
 from DraggableLine import DraggableLine
-from ImportWindow import Ui_ImportWindow
+from InputWindow.ImportWindow import Ui_ImportWindow
 from Constraint_Menu import Ui_ConstraintWindow, Ui_SelectorWindow
 
 class ConstraintWindow(QMainWindow, Ui_ConstraintWindow):

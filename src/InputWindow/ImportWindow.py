@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QGridLayout, QWidget
+from PyQt5.QtWidgets import QFileDialog
 import pandas as pd
-from InputTable import ComboBoxes, FluidList, InputTable
+from InputWindow.ImportTab import ImportTab
 
 class Ui_ImportWindow(object):
 
@@ -30,14 +30,7 @@ class Ui_ImportWindow(object):
 		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 		sizePolicy.setHorizontalStretch(255)
 		sizePolicy.setVerticalStretch(255)
-
-
-
-
-		self.boxes = ComboBoxes()
 		self.verticalLayout.addWidget(self.tabWidget)
-
-
 		ImportWindow.setCentralWidget(self.centralWidget)
 		self.menuBar = QtWidgets.QMenuBar(ImportWindow)
 		self.menuBar.setGeometry(QtCore.QRect(0, 0, 726, 22))
@@ -72,40 +65,25 @@ class Ui_ImportWindow(object):
 		if name.find('.xls') < 0: raise ImportError("File type not supported. \nPlease select an Excel Workbook")
 
 		sheets = pd.read_excel(name, sheet_name = None)
+		self.tabs = []
 
-
-		fluids = FluidList()
-		self.fluidlabels = fluids.label_list()
-		datelist = ['YYYY-MM-DD', 'YYYY-DD-MM', 'MM-DD-YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD', 'YYYY/DD/MM', 'MM/DD/YYYY', 'DD/MM/YYYY', 'MMM-YY', 'YY-MMM', 'MMM/YY', 'YY/MMM']
-
-		items = {"":[""], "UWI":[""], "Date":datelist}
-		items.update({f.fluid_title():f.unit_list() for f in fluids.fluids})
-
-		self.boxes.populate(8, items)
-		w = QWidget()
-		l1 = QGridLayout()
-		w.setLayout(l1)
-		l1.addWidget(self.boxes, 0, 0, 1, 1)
-		
-		# Clear old sheets and add in the spreadsheet as new tabs
 		self.tabWidget.clear()
 		for name, sheet in sheets.items():
-			table = InputTable(self.tabWidget, sheet, name)
-			l1.addWidget(table, 1, 0, -1, -1)
-			self.tabWidget.addTab(w, name)
-			break
+			tab = ImportTab(self.tabWidget, sheet)
+
+			self.tabs.append(tab)
+			self.tabWidget.addTab(tab, name)
+
 		self.showMaximized()
 
 	def import_items(self):
 
 		df = pd.DataFrame()
 
-		for i in range(self.tabWidget.count()):
-			try: 
-				# df = df.append(self.tabWidget.widget(i).import_table()) # changed to concat since it was deprcated
-				df = pd.concat([df, self.tabWidget.widget(i).import_table()])
-			except ValueError: 
-				pass
+		for tab in self.tabs:
+			df = pd.concat([df, tab.import_data()])
+
+		df = df.fillna(0)
 
 		if not df.empty:
 			self.parent.Load_Data(df)
