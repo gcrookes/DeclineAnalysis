@@ -9,11 +9,11 @@ A windows application made to speed up the process of decline analysis by allowi
 
 The main application is divided into several sections.
 
-	- Toolbars: Access additional functionality
-	- Select Well: Pick a well name that will be displayed in the graphs
-	- Plots: A plot of Production vs Cumulative Production is shown on the left. A plot of Production vs Time is shown on the right
-	- Options: Commonly used functionality is placed as buttons for easy access
-	- Results: The production values based on the current decline  
+- Toolbars: Access additional functionality
+- Select Well: Pick a well name that will be displayed in the graphs
+- Plots: A plot of Production vs Cumulative Production is shown on the left. A plot of Production vs Time is shown on the right
+- Options: Commonly used functionality is placed as buttons for easy access
+- Results: The production values based on the current decline  
 
 ![Menus](/Document/Screenshot/menus.png)
 
